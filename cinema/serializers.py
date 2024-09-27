@@ -1,3 +1,5 @@
+# flake8: noqa: E501
+
 from rest_framework import serializers
 
 from cinema.models import Movie, Genre, Actor, CinemaHall

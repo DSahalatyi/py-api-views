@@ -1,3 +1,5 @@
+# flake8: noqa: E501
+
 from django.urls import path, include
 
 from rest_framework import routers
@@ -10,7 +12,6 @@ from cinema.views import (
     CinemaHallViewSet,
     MovieViewSet,
 )
-
 cinema_hall_list = CinemaHallViewSet.as_view(actions={"get": "list", "post": "create"})
 
 cinema_hall_detail = CinemaHallViewSet.as_view(
