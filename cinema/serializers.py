@@ -14,13 +14,8 @@ class MovieSerializer(serializers.Serializer):
     actors = serializers.SerializerMethodField()
 
     def create(self, validated_data: dict) -> Movie:
-        genres_data = self.context["request"].data.get("genres", [])
-        actors_data = self.context["request"].data.get("actors", [])
         movie = Movie.objects.create(**validated_data)
-
-        movie.genres.set(genres_data)
-        movie.actors.set(actors_data)
-
+        self.set_genres_and_actors(movie)
         return movie
 
     def update(self, instance: Movie, validated_data: dict) -> Movie:
@@ -29,13 +24,15 @@ class MovieSerializer(serializers.Serializer):
         instance.duration = validated_data.get("duration", instance.duration)
         instance.save()
 
+        self.set_genres_and_actors(instance)
+        return instance
+
+    def set_genres_and_actors(self, movie: Movie) -> None:
         genres_data = self.context["request"].data.get("genres", [])
         actors_data = self.context["request"].data.get("actors", [])
 
-        instance.genres.set(genres_data)
-        instance.actors.set(actors_data)
-
-        return instance
+        movie.genres.set(genres_data)
+        movie.actors.set(actors_data)
 
     def get_genres(self, movie: Movie) -> list:
         return [genre.id for genre in movie.genres.all()]
